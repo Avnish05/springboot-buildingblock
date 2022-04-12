@@ -37,6 +37,6 @@ public class UserDetails {
 		return "UserDetails [firstname=" + firstname + ", lastname=" + lastname + ", city=" + city + "]";
 	}
 	
-	
+	 
 
 }
