@@ -4,8 +4,12 @@ package com.sacksimplify.restservices.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 //import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.sacksimplify.restservices.entities.User;
 import com.sacksimplify.restservices.exceptions.UserExistException;
+import com.sacksimplify.restservices.exceptions.UserNameNotFoundException;
 import com.sacksimplify.restservices.exceptions.UserNotFoundException;
 //import org.springframework.stereotype.Service;
 import com.sacksimplify.restservices.services.UserServices;
@@ -26,7 +31,7 @@ import com.sacksimplify.restservices.services.UserServices;
 //import src.main.java.com.stacksimplify.restservices.controllers.Void;
 //import src.main.java.com.stacksimplify.restservices.exceptions.UserExistException;
 
-
+@Validated
 @RestController
 public class UserController {
 
@@ -40,7 +45,7 @@ public class UserController {
 	
 	//create user method
 	@PostMapping("/users")
-	public User createUser(@RequestBody User user, UriComponentsBuilder builder) 
+	public User createUser(@Valid @RequestBody User user, UriComponentsBuilder builder) 
 	{
 		try {
 			return userServices.createUser(user);
@@ -57,7 +62,7 @@ public class UserController {
 	
 	//getUserById method
 	@GetMapping("/users/{id}")
-	public Optional<User> getUserById(@PathVariable("id") long id)
+	public Optional<User> getUserById(@Min(1) @PathVariable("id") long id)
 	{
 		try
 		{ 
@@ -91,10 +96,17 @@ public class UserController {
 		userServices.deleteUserById(id);
 	}
 	
+	//UserByUserName
+	
 	@GetMapping("/users/byusername/{username}")
-	public User findByUserName(@PathVariable("username") String username)
+	public User findByUserName(@PathVariable("username") String username) throws UserNameNotFoundException
 	{
-		return userServices.findByUserName(username);
+		User user= userServices.findByUserName(username);
+		if(user==null)
+			throw new UserNameNotFoundException("Username "+ username + " Not found in repo");
+		
+		return user;
+//		return userServices.findByUserName(username);
 	}
 	
 	
