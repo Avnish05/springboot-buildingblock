@@ -11,13 +11,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.hateoas.RepresentationModel;
+
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends RepresentationModel<User>  {
 		
 		@Id
 		@GeneratedValue
-		private Long id;
+		private Long userid;
 		
 		@NotEmpty(message = "Username is Mandatory field. Please provide username")
 		@Size(min=2,message= "FirstName should have atleast 2 characters")
@@ -47,10 +49,10 @@ public class User {
 			
 		}
 
-		public User(Long id, String username, String firstname, String lastname, String email, String role,
+		public User(Long userid, String username, String firstname, String lastname, String email, String role,
 				String ssn) {
 			super();
-			this.id = id;
+			this.userid = userid;
 			this.username = username;
 			this.firstname = firstname;
 			this.lastname = lastname;
@@ -59,12 +61,12 @@ public class User {
 			this.ssn = ssn;
 		}
 
-		public Long getId() {
-			return id;
+		public Long getuserId() {
+			return userid;
 		}
 
-		public void setId(Long id) {
-			this.id = id;
+		public void setuserId(Long id) {
+			this.userid = id;
 		}
 
 		public String getUsername() {
@@ -123,13 +125,9 @@ public class User {
 		public void setOrders(List<Order> orders) {
 			this.orders = orders;
 		}
-
-		//string 
-		@Override
-		public String toString() {
-			return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-					+ ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
-		}
+		
+		
+		
 		
 		
 		
